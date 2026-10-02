@@ -7,8 +7,8 @@ const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
 const RegisterPage = lazy(() => import("./features/auth/pages/RegisterPage"));
 const HomePage = lazy(() => import("./features/lost-founds/pages/HomePage"));
 const DetailPage = lazy(() => import("./features/lost-founds/pages/DetailPage"));
-const UsersPage = lazy(() => import("./features/users/pages/HomePage"));
-const ProfilePage = lazy(() => import("./features/users/pages/DetailPage"));
+const UsersPage = lazy(() => import("./features/users/pages/UsersPage"));
+const ProfilePage = lazy(() => import("./features/users/pages/ProfilePage"));
 
 export default function App() {
   return (

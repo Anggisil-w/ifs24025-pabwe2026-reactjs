@@ -8,4 +8,3 @@ export default function AddModal({ onClose, onDone }) {
   const submit = async (form) => { if (await dispatch(asyncAddLostFound(form))) { onClose(); onDone(); } };
   return <Modal title="Tambah laporan" onClose={onClose}><ReportForm submitLabel="Simpan laporan" onSubmit={submit} /></Modal>;
 }
-    
