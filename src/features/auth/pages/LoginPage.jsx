@@ -25,11 +25,45 @@ export default function LoginPage() {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <h1 className="text-2xl font-bold">Masuk</h1>
-      <label className="block text-sm font-medium">Email<input type="email" className={inputCls} value={email} onChange={setEmail} /></label>
-      <label className="block text-sm font-medium">Kata sandi<input type="password" className={inputCls} value={password} onChange={setPassword} /></label>
-      <button disabled={busy} className="w-full rounded-lg bg-teal-700 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60">{busy ? "Memproses..." : "Masuk"}</button>
-      <p className="text-sm text-slate-600">Belum punya akun? <Link className="font-semibold text-teal-700" to="/auth/register">Daftar</Link></p>
+      <h2 className="text-2xl font-bold">Masuk</h2>
+      
+      {/* 1. Tambah id="login-email-input" */}
+      <label className="block text-sm font-medium">
+        Email
+        <input
+          id="login-email-input"
+          type="email"
+          className={inputCls}
+          value={email}
+          onChange={setEmail}
+        />
+      </label>
+
+      {/* 2. Tambah id="login-password-input" */}
+      <label className="block text-sm font-medium">
+        Kata sandi
+        <input
+          id="login-password-input"
+          type="password"
+          className={inputCls}
+          value={password}
+          onChange={setPassword}
+        />
+      </label>
+
+      {/* 3. Tambah id="login-submit-button" */}
+      <button
+        id="login-submit-button"
+        type="submit"
+        disabled={busy}
+        className="w-full rounded-lg bg-teal-700 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
+      >
+        {busy ? "Memproses..." : "Masuk"}
+      </button>
+
+      <p className="text-sm text-slate-600">
+        Belum punya akun? <Link className="font-semibold text-teal-700" to="/auth/register">Daftar</Link>
+      </p>
     </form>
   );
 }
