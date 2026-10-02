@@ -14,10 +14,12 @@ export default function DetailPage() {
   const item = useSelector((s) => s.lostFounds.lostFound);
   const me = useSelector((s) => s.auth.user);
   const [modal, setModal] = useState(null);
-  const load = () => dispatch(asyncGetLostFound(id));
+  const [failed, setFailed] = useState(false);
+  const load = async () => { setFailed(false); setFailed(!(await dispatch(asyncGetLostFound(id)))); };
   useEffect(() => { load(); }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!item) return <p className="text-slate-500">Memuat laporan...</p>;
+  if (failed) return (<section className="max-w-2xl space-y-3"><h1 className="text-2xl font-bold">Laporan tidak ditemukan</h1><p className="text-slate-600">Laporan ini tidak ada atau tidak bisa dimuat.</p><Link to="/" className="text-sm font-medium text-teal-700">← Kembali ke daftar</Link></section>);
+  if (!item) return (<section aria-busy="true"><h1 className="sr-only">Detail laporan</h1><p className="text-slate-600">Memuat laporan...</p></section>);
   const owner = me && me.id === item.user_id;
   const remove = async () => { if (await dispatch(asyncDeleteLostFound(item.id))) navigate("/"); };
 

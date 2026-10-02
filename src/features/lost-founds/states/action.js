@@ -12,7 +12,7 @@ export const asyncGetLostFounds = (params) => async (dispatch) => {
 export const asyncGetLostFound = (id) => async (dispatch) => {
   dispatch(lostFound(null));
   try { const { data } = await api.getLostFound(id); dispatch(lostFound(data.lost_found)); return true; }
-  catch (e) { showErrorDialog(e.message); return false; }
+  catch { return false; }
 };
 
 const mutate = (call, okMsg) => async () => {

@@ -17,7 +17,7 @@ export async function apiFetch(path, { method = "GET", body, form, params, auth 
     headers["Content-Type"] = "application/json";
     payload = JSON.stringify(body);
   }
-  const res = await fetch(url, { method, headers, body: payload });
+  const res = await fetch(url, { method, headers, body: payload, credentials: "omit" });
   const json = await res.json().catch(() => null);
   // API Delcom memakai { success: true } (sebagian versi { status: "success" }); terima keduanya.
   const ok = json ? (json.success === true || json.status === "success") : false;
