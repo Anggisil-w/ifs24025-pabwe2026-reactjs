@@ -24,7 +24,7 @@ export default function DetailPage() {
   return (
     <article className="max-w-2xl space-y-4">
       <Link to="/" className="text-sm font-medium text-teal-700">← Kembali ke daftar</Link>
-      {coverUrl(item.cover) ? <img src={coverUrl(item.cover)} alt={item.title} className="max-h-96 w-full rounded-xl object-contain bg-slate-100" /> : <div className="flex h-48 items-center justify-center rounded-xl bg-slate-100 text-slate-400">Belum ada foto</div>}
+      {coverUrl(item.cover) ? <img src={coverUrl(item.cover)} alt={item.title} className="max-h-96 w-full rounded-xl object-contain bg-slate-100" /> : <div className="flex h-48 items-center justify-center rounded-xl bg-slate-100 text-slate-600">Belum ada foto</div>}
       <div className="flex items-center gap-2"><StatusBadge status={item.status} /><span className="text-sm text-slate-500">{item.is_completed === 1 ? "Selesai" : "Dalam proses"}</span></div>
       <h1 className="text-3xl font-extrabold">{item.title}</h1>
       <p className="whitespace-pre-line text-slate-700">{item.description}</p>

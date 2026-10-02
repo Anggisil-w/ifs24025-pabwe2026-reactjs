@@ -39,9 +39,9 @@ export default function HomePage() {
         {stats.map(([k, v]) => <div key={k} className="rounded-xl border border-slate-200 bg-white p-3"><dt className="text-sm text-slate-500">{k}</dt><dd className="text-2xl font-bold">{v}</dd></div>)}
       </dl>
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative"><IconSearch size={16} className="absolute left-3 top-3 text-slate-400" /><input value={q} onChange={setQ} placeholder="Cari judul atau deskripsi" className={clsx(sel, "pl-9")} /></div>
-        <select value={status} onChange={setStatus} className={sel}><option value="">Semua jenis</option><option value="lost">Hilang</option><option value="found">Ditemukan</option></select>
-        <select value={done} onChange={setDone} className={sel}><option value="">Semua status</option><option value="0">Dalam proses</option><option value="1">Selesai</option></select>
+        <div className="relative"><IconSearch size={16} className="absolute left-3 top-3 text-slate-500" /><input aria-label="Cari laporan" value={q} onChange={setQ} placeholder="Cari judul atau deskripsi" className={clsx(sel, "pl-9")} /></div>
+        <select aria-label="Filter jenis laporan" value={status} onChange={setStatus} className={sel}><option value="">Semua jenis</option><option value="lost">Hilang</option><option value="found">Ditemukan</option></select>
+        <select aria-label="Filter status laporan" value={done} onChange={setDone} className={sel}><option value="">Semua status</option><option value="0">Dalam proses</option><option value="1">Selesai</option></select>
         <label className="flex items-center gap-1 text-sm"><input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />Laporan saya</label>
       </div>
       {loading && <p className="text-slate-500">Memuat...</p>}
@@ -50,12 +50,12 @@ export default function HomePage() {
         {shown.map((i) => (
           <li key={i.id}>
             <Link to={`/lost-founds/${i.id}`} className="block overflow-hidden rounded-xl border border-slate-200 bg-white hover:border-teal-600">
-              {coverUrl(i.cover) ? <img src={coverUrl(i.cover)} alt="" className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-400">Belum ada foto</div>}
+              {coverUrl(i.cover) ? <img src={coverUrl(i.cover)} alt="" className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-600">Belum ada foto</div>}
               <div className="space-y-1 p-3">
                 <div className="flex items-center gap-2"><StatusBadge status={i.status} />{i.is_completed === 1 && <span className="text-xs text-slate-500">Selesai</span>}</div>
                 <h2 className="font-semibold">{i.title}</h2>
                 <p className="line-clamp-2 text-sm text-slate-600">{i.description}</p>
-                <p className="text-xs text-slate-400">{i.author?.name} · {formatDate(i.created_at)}</p>
+                <p className="text-xs text-slate-600">{i.author?.name} · {formatDate(i.created_at)}</p>
               </div>
             </Link>
           </li>
