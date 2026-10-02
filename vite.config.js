@@ -3,12 +3,33 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import process from "process";
 
+// Sisipkan CSS hasil build ke <style> di index.html agar tidak ada stylesheet yang memblokir render.
+const inlineCss = () => ({
+  name: "inline-css",
+  apply: "build",
+  enforce: "post",
+  transformIndexHtml: {
+    order: "post",
+    handler(html, ctx) {
+      const bundle = ctx?.bundle;
+      if (!bundle) return html;
+      return html.replace(/<link rel="stylesheet"[^>]*href="([^"]+\.css)"[^>]*>/g, (tag, href) => {
+        const name = href.replace(/^\//, "");
+        const asset = bundle[name];
+        if (!asset || asset.type !== "asset") return tag;
+        const css = String(asset.source).replace(/<\/style/gi, "<\\/style");
+        return `<style>${css}</style>`;
+      });
+    },
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), inlineCss()],
     server: { port: Number(env.APP_PORT) || 3000 },
     preview: { port: Number(env.APP_PORT) || 3000 },
     define: {

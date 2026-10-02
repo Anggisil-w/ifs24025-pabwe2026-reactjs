@@ -42,7 +42,7 @@ export default function HomePage() {
         <div className="relative"><IconSearch size={16} aria-hidden="true" className="absolute left-3 top-3 text-slate-500" /><input id="search-input" type="search" autoComplete="off" aria-label="Cari judul atau deskripsi" value={q} onChange={setQ} placeholder="Cari judul atau deskripsi" className={clsx(sel, "pl-9 placeholder:text-slate-500")} /></div>
         <select id="filter-jenis" aria-label="Filter jenis laporan" value={status} onChange={setStatus} className={sel}><option value="">Semua jenis</option><option value="lost">Hilang</option><option value="found">Ditemukan</option></select>
         <select id="filter-status" aria-label="Filter status laporan" value={done} onChange={setDone} className={sel}><option value="">Semua status</option><option value="0">Dalam proses</option><option value="1">Selesai</option></select>
-        <label className="flex items-center gap-1 text-sm"><input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />Laporan saya</label>
+        <label className="flex items-center gap-1 text-sm"><input id="filter-mine" name="mine" type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />Laporan saya</label>
       </div>
       {loading && <p className="text-slate-500">Memuat...</p>}
       {!loading && !shown.length && <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-500">Belum ada laporan. Tambahkan laporan pertama dengan tombol di kanan atas.</p>}

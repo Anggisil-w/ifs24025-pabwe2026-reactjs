@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AuthLayout from "./features/auth/layouts/AuthLayout";
-import LostFoundLayout from "./features/lost-founds/layouts/LostFoundLayout";
 
+const LostFoundLayout = lazy(() => import("./features/lost-founds/layouts/LostFoundLayout"));
 const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
 const RegisterPage = lazy(() => import("./features/auth/pages/RegisterPage"));
 const HomePage = lazy(() => import("./features/lost-founds/pages/HomePage"));
@@ -12,7 +12,7 @@ const ProfilePage = lazy(() => import("./features/users/pages/ProfilePage"));
 
 export default function App() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<h1 className="sr-only">Memuat halaman</h1>}>
       <Routes>
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<Navigate to="/auth/login" replace />} />
