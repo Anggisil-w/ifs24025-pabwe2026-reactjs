@@ -5,9 +5,12 @@ import { isAuthLogin, isAuthRegister, isAuthLogout } from "./reducer";
 
 export const asyncLogin = (form) => async (dispatch) => {
   try {
-    const { data } = await loginApi(form);
-    putAccessToken(data.token);
-    dispatch(isAuthLogin({ token: data.token, user: data.user }));
+    const res = await loginApi(form);
+    const data = res.data ?? {};
+    const token = data.token ?? data.access_token ?? data.accessToken;
+    if (!token) throw new Error("Token tidak ditemukan pada respons login.");
+    putAccessToken(token);
+    dispatch(isAuthLogin({ token, user: data.user }));
     return true;
   } catch (e) { showErrorDialog(firstFieldError(e)); return false; }
 };
