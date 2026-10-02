@@ -10,5 +10,5 @@ export const asyncGetUsers = () => async (dispatch) => {
 
 export const asyncGetProfile = () => async (dispatch) => {
   try { const { data } = await getMe(); dispatch(setProfile(data.user ?? data)); return true; }
-  catch { return false; }
+  catch (e) { return e?.status === 401 ? false : true; }
 };
