@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <h2 className="text-2xl font-bold">Masuk</h2>
+      <h1 className="text-2xl font-bold">Masuk</h1>
       
       {/* 1. Tambah id="login-email-input" */}
       <label className="block text-sm font-medium">

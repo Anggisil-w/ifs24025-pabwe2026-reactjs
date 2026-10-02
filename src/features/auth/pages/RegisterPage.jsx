@@ -25,7 +25,7 @@ export default function RegisterPage() {
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <h2 className="text-2xl font-bold">Daftar akun</h2>
+      <h1 className="text-2xl font-bold">Daftar akun</h1>
       
       {/* 1. Tambah id="register-name-input" */}
       <label className="block text-sm font-medium">
