@@ -33,6 +33,8 @@ export default function RegisterPage() {
         <input
           id="register-name-input"
           type="text"
+          name="name"
+          autoComplete="name"
           className={inputCls}
           value={name}
           onChange={setName}
@@ -45,6 +47,8 @@ export default function RegisterPage() {
         <input
           id="register-email-input"
           type="email"
+          name="email"
+          autoComplete="email"
           className={inputCls}
           value={email}
           onChange={setEmail}
@@ -57,6 +61,8 @@ export default function RegisterPage() {
         <input
           id="register-password-input"
           type="password"
+          name="password"
+          autoComplete="new-password"
           className={inputCls}
           value={password}
           onChange={setPassword}
