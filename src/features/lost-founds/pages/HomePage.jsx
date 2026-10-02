@@ -16,11 +16,12 @@ const sel = "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
 
 // Kartu dipisah & di-memo agar re-render akibat state lain (mis. profil) tidak menggambar ulang seluruh daftar.
 const ReportCard = memo(function ReportCard({ item: i }) {
-  const cover = coverUrl(i.cover);
+  const [broken, setBroken] = useState(false);
+  const cover = broken ? null : coverUrl(i.cover);
   return (
     <li>
       <Link to={`/lost-founds/${i.id}`} className="block overflow-hidden rounded-xl border border-slate-200 bg-white hover:border-teal-600">
-        {cover ? <img src={cover} alt={`Foto ${i.title}`} width="400" height="160" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-600">Belum ada foto</div>}
+        {cover ? <img src={cover} alt={`Foto ${i.title}`} width="400" height="160" loading="lazy" decoding="async" onError={() => setBroken(true)} className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-600">Belum ada foto</div>}
         <div className="space-y-1 p-3">
           <div className="flex items-center gap-2"><StatusBadge status={i.status} />{i.is_completed === 1 && <span className="text-xs text-slate-500">Selesai</span>}</div>
           <h2 className="font-semibold">{i.title}</h2>
