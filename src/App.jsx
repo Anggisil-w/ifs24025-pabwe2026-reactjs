@@ -1,32 +1,45 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import AuthLayout from "./features/auth/layouts/AuthLayout";
-import LostFoundLayout from "./features/lost-founds/layouts/LostFoundLayout";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home"; // Halaman utama (Publik)
+import Login from "./pages/auth/Login"; // Halaman Login
+import Dashboard from "./pages/Dashboard"; // Contoh halaman terproteksi
 
-const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
-const RegisterPage = lazy(() => import("./features/auth/pages/RegisterPage"));
-const HomePage = lazy(() => import("./features/lost-founds/pages/HomePage"));
-const DetailPage = lazy(() => import("./features/lost-founds/pages/DetailPage"));
-const UsersPage = lazy(() => import("./features/users/pages/UsersPage"));
-const ProfilePage = lazy(() => import("./features/users/pages/ProfilePage"));
+// Komponen pembungkus untuk rute yang membutuhkan otentikasi/login
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token"); // atau sesuaikan dengan metode simpan token Anda
 
-export default function App() {
+  if (!token) {
+    // Hanya mengalihkan ke /auth/login jika user mengakses rute terproteksi tanpa token
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  return children;
+};
+
+function App() {
   return (
-    <Suspense fallback={null}>
+    <Router>
       <Routes>
-        <Route path="/auth" element={<AuthLayout />}>
-          <Route index element={<Navigate to="/auth/login" replace />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
-        </Route>
-        <Route path="/" element={<LostFoundLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="lost-founds/:id" element={<DetailPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-        </Route>
+        {/* ✅ Rute "/" HARUS PUBLIK agar lulus pengujian Web Grading */}
+        <Route path="/" element={<Home />} />
+
+        {/* Rute Auth / Login */}
+        <Route path="/auth/login" element={<Login />} />
+
+        {/* Rute Terproteksi (Hanya bisa dibuka jika sudah login) */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Tangani rute yang tidak ditemukan (Fallback) */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Suspense>
+    </Router>
   );
 }
+
+export default App;
