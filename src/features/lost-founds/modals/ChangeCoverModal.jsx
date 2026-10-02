@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 import { asyncChangeCover } from "../states/action";
@@ -6,13 +6,8 @@ import { asyncChangeCover } from "../states/action";
 export default function ChangeCoverModal({ id, onClose, onDone }) {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  useEffect(() => {
-    if (!file) return setPreview(null);
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+  const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
   const submit = async () => { if (await dispatch(asyncChangeCover(id, file))) { onClose(); onDone(); } };
   return (

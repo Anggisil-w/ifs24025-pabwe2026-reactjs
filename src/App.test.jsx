@@ -5,15 +5,17 @@ import { renderWithProviders } from "./test-utils";
 
 describe("App Component", () => {
   it("should render application without crashing", () => {
-    const { container } = renderWithProviders(<App />);
+    const { container } = renderWithProviders(<App />, { route: "/auth/login" });
     expect(container).toBeDefined();
   });
 
-  it("should render 404 NotFoundPage for invalid route", () => {
-    window.history.pushState({}, "Not Found", "/random-invalid-route");
-    renderWithProviders(<App />);
-    expect(screen.getByText("404")).toBeInTheDocument();
-    expect(screen.getByText("Halaman Tidak Ditemukan")).toBeInTheDocument();
+  it("redirects unauthenticated users to the login page", async () => {
+    renderWithProviders(<App />, { route: "/" });
+    expect(await screen.findByRole("heading", { name: "Masuk" })).toBeInTheDocument();
+  });
+
+  it("redirects unknown routes to the login page when not authenticated", async () => {
+    renderWithProviders(<App />, { route: "/random-invalid-route" });
+    expect(await screen.findByRole("heading", { name: "Masuk" })).toBeInTheDocument();
   });
 });
-

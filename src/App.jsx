@@ -1,11 +1,12 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AuthLayout from "./features/auth/layouts/AuthLayout";
+import LoginPage from "./features/auth/pages/LoginPage";
+import RegisterPage from "./features/auth/pages/RegisterPage";
+import LostFoundLayout from "./features/lost-founds/layouts/LostFoundLayout";
+import HomePage from "./features/lost-founds/pages/HomePage";
 
-const LostFoundLayout = lazy(() => import("./features/lost-founds/layouts/LostFoundLayout"));
-const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
-const RegisterPage = lazy(() => import("./features/auth/pages/RegisterPage"));
-const HomePage = lazy(() => import("./features/lost-founds/pages/HomePage"));
+// Rute awal dimuat langsung (tanpa waterfall request); halaman lain dimuat saat dibutuhkan.
 const DetailPage = lazy(() => import("./features/lost-founds/pages/DetailPage"));
 const UsersPage = lazy(() => import("./features/users/pages/UsersPage"));
 const ProfilePage = lazy(() => import("./features/users/pages/ProfilePage"));

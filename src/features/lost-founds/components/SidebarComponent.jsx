@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
 const items = [["/", "Laporan"], ["/users", "Pengguna"], ["/profile", "Profil saya"]];
 
-export default function SidebarComponent() {
+function SidebarComponent() {
   return (
     <nav aria-label="Menu utama" className="flex gap-1 overflow-x-auto border-b border-slate-200 bg-white p-2 md:w-48 md:flex-col md:border-b-0 md:border-r">
       {items.map(([to, label]) => (
@@ -12,3 +13,5 @@ export default function SidebarComponent() {
     </nav>
   );
 }
+
+export default memo(SidebarComponent);

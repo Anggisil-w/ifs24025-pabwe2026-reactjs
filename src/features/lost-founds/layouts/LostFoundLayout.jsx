@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import NavbarComponent from "../components/NavbarComponent";
@@ -16,9 +16,9 @@ export default function LostFoundLayout() {
     dispatch(asyncGetProfile()).then((ok) => { if (!ok) dispatch(asyncLogout()); });
   }, [token, dispatch]);
 
-  if (!token) return <Navigate to="/auth/login" replace />;
+  const logout = useCallback(async () => { await dispatch(asyncLogout()); navigate("/auth/login"); }, [dispatch, navigate]);
 
-  const logout = async () => { await dispatch(asyncLogout()); navigate("/auth/login"); };
+  if (!token) return <Navigate to="/auth/login" replace />;
 
   return (
     <div className="flex min-h-screen flex-col">

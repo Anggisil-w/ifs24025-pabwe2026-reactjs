@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
@@ -14,9 +14,29 @@ export const StatusBadge = ({ status }) => (
 
 const sel = "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
 
-export default function HomePage() {
+// Kartu dipisah & di-memo agar re-render akibat state lain (mis. profil) tidak menggambar ulang seluruh daftar.
+const ReportCard = memo(function ReportCard({ item: i }) {
+  const cover = coverUrl(i.cover);
+  return (
+    <li>
+      <Link to={`/lost-founds/${i.id}`} className="block overflow-hidden rounded-xl border border-slate-200 bg-white hover:border-teal-600">
+        {cover ? <img src={cover} alt={`Foto ${i.title}`} width="400" height="160" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-600">Belum ada foto</div>}
+        <div className="space-y-1 p-3">
+          <div className="flex items-center gap-2"><StatusBadge status={i.status} />{i.is_completed === 1 && <span className="text-xs text-slate-500">Selesai</span>}</div>
+          <h2 className="font-semibold">{i.title}</h2>
+          <p className="line-clamp-2 text-sm text-slate-600">{i.description}</p>
+          <p className="text-xs text-slate-600">{i.author?.name} · {formatDate(i.created_at)}</p>
+        </div>
+      </Link>
+    </li>
+  );
+});
+
+function HomePage() {
   const dispatch = useDispatch();
-  const { lostFounds: list, isLostFound: loading } = useSelector((s) => s.lostFounds);
+  const { lostFounds: rawList, isLostFound: loading } = useSelector((s) => s.lostFounds);
+  // Render daftar dipecah (time-sliced) agar tidak ada long task yang memblokir main thread.
+  const list = useDeferredValue(rawList);
   const [status, setStatus] = useInput("");
   const [done, setDone] = useInput("");
   const [q, setQ] = useInput("");
@@ -26,8 +46,11 @@ export default function HomePage() {
   const load = () => dispatch(asyncGetLostFounds({ status, is_completed: done, is_me: mine ? 1 : undefined }));
   useEffect(() => { load(); }, [status, done, mine]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const shown = list.filter((i) => `${i.title} ${i.description}`.toLowerCase().includes(q.toLowerCase()));
-  const stats = [["Total", list.length], ["Hilang", list.filter((i) => i.status === "lost").length], ["Ditemukan", list.filter((i) => i.status === "found").length], ["Selesai", list.filter((i) => i.is_completed === 1).length]];
+  const shown = useMemo(() => {
+    const needle = q.toLowerCase();
+    return list.filter((i) => `${i.title} ${i.description}`.toLowerCase().includes(needle));
+  }, [list, q]);
+  const stats = useMemo(() => [["Total", list.length], ["Hilang", list.filter((i) => i.status === "lost").length], ["Ditemukan", list.filter((i) => i.status === "found").length], ["Selesai", list.filter((i) => i.is_completed === 1).length]], [list]);
 
   return (
     <section className="space-y-5">
@@ -47,21 +70,11 @@ export default function HomePage() {
       {loading && <p className="text-slate-500">Memuat...</p>}
       {!loading && !shown.length && <p className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-500">Belum ada laporan. Tambahkan laporan pertama dengan tombol di kanan atas.</p>}
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {shown.map((i) => (
-          <li key={i.id}>
-            <Link to={`/lost-founds/${i.id}`} className="block overflow-hidden rounded-xl border border-slate-200 bg-white hover:border-teal-600">
-              {coverUrl(i.cover) ? <img src={coverUrl(i.cover)} alt={`Foto ${i.title}`} width="400" height="160" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = "none"; }} className="h-40 w-full object-cover" /> : <div className="flex h-40 items-center justify-center bg-slate-100 text-slate-600">Belum ada foto</div>}
-              <div className="space-y-1 p-3">
-                <div className="flex items-center gap-2"><StatusBadge status={i.status} />{i.is_completed === 1 && <span className="text-xs text-slate-500">Selesai</span>}</div>
-                <h2 className="font-semibold">{i.title}</h2>
-                <p className="line-clamp-2 text-sm text-slate-600">{i.description}</p>
-                <p className="text-xs text-slate-600">{i.author?.name} · {formatDate(i.created_at)}</p>
-              </div>
-            </Link>
-          </li>
-        ))}
+        {shown.map((i) => <ReportCard key={i.id} item={i} />)}
       </ul>
       {adding && <AddModal onClose={() => setAdding(false)} onDone={load} />}
     </section>
   );
 }
+
+export default memo(HomePage);

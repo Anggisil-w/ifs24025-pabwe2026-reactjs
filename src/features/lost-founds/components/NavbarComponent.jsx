@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { IconLogout } from "@tabler/icons-react";
 
-export default function NavbarComponent({ name, onLogout }) {
+function NavbarComponent({ name, onLogout }) {
   return (
     <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
       <div className="flex items-center gap-2 font-bold"><img src="/logo.svg" alt="" width="28" height="28" className="h-7 w-7" />Lost &amp; Found</div>
@@ -11,3 +12,5 @@ export default function NavbarComponent({ name, onLogout }) {
     </header>
   );
 }
+
+export default memo(NavbarComponent);

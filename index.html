@@ -3,26 +3,26 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ethe Lost &amp; Found</title>
   <meta name="description" content="Catat laporan barang hilang atau temuan, tambahkan foto, dan pantau sampai barang kembali ke pemiliknya." />
   <meta name="robots" content="index, follow" />
-  <link rel="preconnect" href="https://open-api.delcom.org" crossorigin />
-  <!-- Google Fonts: dimuat non-blocking -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript>
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-  </noscript>
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <!-- Font di-host sendiri (tanpa request pihak ketiga) -->
+  <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 </head>
 
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen">
-  <div id="root"></div>
+  <div id="root">
+    <!-- App shell statis: tampil seketika sebelum JavaScript siap, lalu digantikan React -->
+    <div class="flex min-h-screen flex-col items-center justify-center gap-4 bg-teal-800 p-8 text-center text-teal-50">
+      <img src="/logo.svg" alt="" width="64" height="64" class="h-16 w-16" />
+      <p class="max-w-2xl text-3xl font-extrabold leading-tight lg:text-5xl">Barangmu hilang?<br />Atau kamu menemukannya?</p>
+      <p class="max-w-md text-teal-100">Catat laporan, tambahkan foto, dan pantau sampai barang kembali ke pemiliknya.</p>
+    </div>
+  </div>
+  <noscript>Aplikasi ini membutuhkan JavaScript untuk berjalan.</noscript>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
