@@ -15,7 +15,7 @@ export const formatDate = (iso) =>
 export const coverUrl = (path) => {
   if (!path) return null;
   if (/^https?:\/\//i.test(path)) return path;
-  return `${new URL(DELCOM_BASEURL).origin}/${String(path).replace(/^\/+/, "")}`;
+  return `${DELCOM_ORIGIN}/${String(path).replace(/^\/+/, "")}`;
 };
 
 export const firstFieldError = (err) => {

@@ -25,17 +25,28 @@ const inlineCss = () => ({
 });
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
   const env = loadEnv(mode, process.cwd(), "");
+
+  // Server Delcom membalas preflight CORS dengan `Access-Control-Allow-Headers: *`, dan Chrome menandai
+  // header Authorization sebagai "deprecated feature" (menurunkan skor Best Practices). Solusinya: di build
+  // produksi, browser memanggil API lewat domain sendiri (/api/v1) dan Vercel meneruskannya (lihat vercel.json).
+  const upstream = env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1";
+  const upstreamUrl = new URL(upstream);
+  const useProxy =
+    command === "build" &&
+    env.VITE_DELCOM_PROXY !== "false" &&
+    (env.VITE_DELCOM_PROXY === "true" || upstreamUrl.origin === "https://open-api.delcom.org");
 
   return {
     plugins: [react(), tailwindcss(), inlineCss()],
     server: { port: Number(env.APP_PORT) || 3000 },
     preview: { port: Number(env.APP_PORT) || 3000 },
     define: {
-      DELCOM_BASEURL: JSON.stringify(
-        env.VITE_DELCOM_BASEURL || "https://open-api.delcom.org/api/v1"
-      ),
+      // Alamat yang dipanggil browser untuk request API.
+      DELCOM_BASEURL: JSON.stringify(useProxy ? upstreamUrl.pathname.replace(/\/$/, "") : upstream),
+      // Origin asli server Delcom (dipakai untuk gambar cover, yang tidak butuh CORS).
+      DELCOM_ORIGIN: JSON.stringify(upstreamUrl.origin),
     },
     test: {
       globals: true,

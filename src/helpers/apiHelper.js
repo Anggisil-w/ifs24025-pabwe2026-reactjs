@@ -4,7 +4,7 @@ export const putAccessToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 export const removeAccessToken = () => localStorage.removeItem(TOKEN_KEY);
 
 export async function apiFetch(path, { method = "GET", body, form, params, auth = true } = {}) {
-  const url = new URL(DELCOM_BASEURL + path);
+  const url = new URL(DELCOM_BASEURL + path, window.location.origin);
   Object.entries(params || {}).forEach(([k, v]) => {
     if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, v);
   });
