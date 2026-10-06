@@ -25,7 +25,7 @@ export default function LostFoundLayout() {
       <NavbarComponent name={user?.name} onLogout={logout} />
       <div className="flex flex-1 flex-col md:flex-row">
         <SidebarComponent />
-        <main className="flex-1 p-4 md:p-6"><Outlet /></main>
+        <main className="mx-auto w-full max-w-6xl flex-1 animate-fade-up p-4 md:p-8"><Outlet /></main>
       </div>
     </div>
   );

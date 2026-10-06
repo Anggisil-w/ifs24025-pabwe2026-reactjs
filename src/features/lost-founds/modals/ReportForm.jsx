@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useInput from "../../../hooks/useInput";
-import { inputCls } from "../../auth/pages/LoginPage";
+import { btnPrimary, inputCls } from "../../../helpers/uiClasses";
 
 export default function ReportForm({ initial = {}, withCompleted, submitLabel, onSubmit }) {
   const [title, setTitle] = useInput(initial.title || "");
@@ -19,14 +19,14 @@ export default function ReportForm({ initial = {}, withCompleted, submitLabel, o
   };
 
   return (
-    <form onSubmit={submit} className="space-y-3">
-      <label className="block text-sm font-medium">Judul<input id="report-title" name="title" required className={inputCls} value={title} onChange={setTitle} /></label>
-      <label className="block text-sm font-medium">Deskripsi<textarea id="report-description" name="description" required rows={3} className={inputCls} value={description} onChange={setDescription} /></label>
-      <label className="block text-sm font-medium">Jenis laporan
+    <form onSubmit={submit} className="space-y-4">
+      <label className="block text-sm font-medium text-slate-700">Judul<input placeholder="Mis. Dompet hitam" id="report-title" name="title" required className={inputCls} value={title} onChange={setTitle} /></label>
+      <label className="block text-sm font-medium text-slate-700">Deskripsi<textarea placeholder="Ciri-ciri, lokasi, dan waktu kejadian" id="report-description" name="description" required rows={3} className={inputCls} value={description} onChange={setDescription} /></label>
+      <label className="block text-sm font-medium text-slate-700">Jenis laporan
         <select id="report-status" name="status" aria-label="Jenis laporan" className={inputCls} value={status} onChange={setStatus}><option value="lost">Barang hilang</option><option value="found">Barang ditemukan</option></select>
       </label>
-      {withCompleted && <label className="flex items-center gap-2 text-sm"><input id="report-done" name="done" type="checkbox" checked={done} onChange={(e) => setDone(e.target.checked)} />Sudah selesai</label>}
-      <button disabled={busy} className="w-full rounded-lg bg-teal-700 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60">{busy ? "Menyimpan..." : submitLabel}</button>
+      {withCompleted && <label className="flex items-center gap-2.5 rounded-xl bg-slate-50 px-3.5 py-2.5 text-sm font-medium text-slate-700"><input id="report-done" name="done" type="checkbox" className="h-4 w-4 accent-teal-700" checked={done} onChange={(e) => setDone(e.target.checked)} />Sudah selesai</label>}
+      <button disabled={busy} className={`${btnPrimary} w-full`}>{busy ? "Menyimpan..." : submitLabel}</button>
     </form>
   );
 }

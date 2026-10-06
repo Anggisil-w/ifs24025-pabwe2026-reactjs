@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { IconLock, IconMail } from "@tabler/icons-react";
 import useInput from "../../../hooks/useInput";
 import { asyncLogin } from "../states/action";
 import { showErrorDialog } from "../../../helpers/toolsHelper";
+import { btnPrimary, inputCls } from "../../../helpers/uiClasses";
 
-export const inputCls = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:outline-2 focus:outline-teal-600";
+const iconCls = "pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -24,49 +26,52 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <h1 className="text-2xl font-bold">Masuk</h1>
-      
-      {/* 1. Tambah id="login-email-input" */}
-      <label className="block text-sm font-medium">
+    <form onSubmit={submit} className="space-y-5">
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight">Masuk</h1>
+        <p className="mt-1 text-sm text-slate-500">Selamat datang kembali! Lanjutkan ke akunmu.</p>
+      </div>
+
+      <label className="block text-sm font-medium text-slate-700">
         Email
-        <input
-          id="login-email-input"
-          type="email"
-          name="email"
-          autoComplete="email"
-          className={inputCls}
-          value={email}
-          onChange={setEmail}
-        />
+        <div className="relative">
+          <IconMail size={18} aria-hidden="true" className={iconCls} />
+          <input
+            id="login-email-input"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="nama@email.com"
+            className={`${inputCls} pl-10`}
+            value={email}
+            onChange={setEmail}
+          />
+        </div>
       </label>
 
-      {/* 2. Tambah id="login-password-input" */}
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium text-slate-700">
         Kata sandi
-        <input
-          id="login-password-input"
-          type="password"
-          name="password"
-          autoComplete="current-password"
-          className={inputCls}
-          value={password}
-          onChange={setPassword}
-        />
+        <div className="relative">
+          <IconLock size={18} aria-hidden="true" className={iconCls} />
+          <input
+            id="login-password-input"
+            type="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="••••••••"
+            className={`${inputCls} pl-10`}
+            value={password}
+            onChange={setPassword}
+          />
+        </div>
       </label>
 
-      {/* 3. Tambah id="login-submit-button" */}
-      <button
-        id="login-submit-button"
-        type="submit"
-        disabled={busy}
-        className="w-full rounded-lg bg-teal-700 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-      >
+      <button id="login-submit-button" type="submit" disabled={busy} className={`${btnPrimary} w-full`}>
         {busy ? "Memproses..." : "Masuk"}
       </button>
 
-      <p className="text-sm text-slate-600">
-        Belum punya akun? <Link className="font-semibold text-teal-700" to="/auth/register">Daftar</Link>
+      <p className="text-center text-sm text-slate-600">
+        Belum punya akun? <Link className="font-semibold text-teal-700 hover:text-teal-800 hover:underline" to="/auth/register">Daftar</Link>
       </p>
     </form>
   );

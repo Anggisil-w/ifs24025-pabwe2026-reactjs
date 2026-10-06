@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { IconLock, IconMail, IconUser } from "@tabler/icons-react";
 import useInput from "../../../hooks/useInput";
 import { asyncRegister } from "../states/action";
 import { showErrorDialog } from "../../../helpers/toolsHelper";
-import { inputCls } from "./LoginPage";
+import { btnPrimary, inputCls } from "../../../helpers/uiClasses";
+
+const iconCls = "pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400";
 
 export default function RegisterPage() {
   const dispatch = useDispatch();
@@ -24,63 +27,69 @@ export default function RegisterPage() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <h1 className="text-2xl font-bold">Daftar akun</h1>
-      
-      {/* 1. Tambah id="register-name-input" */}
-      <label className="block text-sm font-medium">
+    <form onSubmit={submit} className="space-y-5">
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight">Daftar akun</h1>
+        <p className="mt-1 text-sm text-slate-500">Buat akun gratis dan mulai catat laporanmu.</p>
+      </div>
+
+      <label className="block text-sm font-medium text-slate-700">
         Nama
-        <input
-          id="register-name-input"
-          type="text"
-          name="name"
-          autoComplete="name"
-          className={inputCls}
-          value={name}
-          onChange={setName}
-        />
+        <div className="relative">
+          <IconUser size={18} aria-hidden="true" className={iconCls} />
+          <input
+            id="register-name-input"
+            type="text"
+            name="name"
+            autoComplete="name"
+            placeholder="Nama lengkap"
+            className={`${inputCls} pl-10`}
+            value={name}
+            onChange={setName}
+          />
+        </div>
       </label>
 
-      {/* 2. Tambah id="register-email-input" */}
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium text-slate-700">
         Email
-        <input
-          id="register-email-input"
-          type="email"
-          name="email"
-          autoComplete="email"
-          className={inputCls}
-          value={email}
-          onChange={setEmail}
-        />
+        <div className="relative">
+          <IconMail size={18} aria-hidden="true" className={iconCls} />
+          <input
+            id="register-email-input"
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="nama@email.com"
+            className={`${inputCls} pl-10`}
+            value={email}
+            onChange={setEmail}
+          />
+        </div>
       </label>
 
-      {/* 3. Tambah id="register-password-input" */}
-      <label className="block text-sm font-medium">
+      <label className="block text-sm font-medium text-slate-700">
         Kata sandi
-        <input
-          id="register-password-input"
-          type="password"
-          name="password"
-          autoComplete="new-password"
-          className={inputCls}
-          value={password}
-          onChange={setPassword}
-        />
+        <div className="relative">
+          <IconLock size={18} aria-hidden="true" className={iconCls} />
+          <input
+            id="register-password-input"
+            type="password"
+            name="password"
+            autoComplete="new-password"
+            placeholder="Minimal 6 karakter"
+            className={`${inputCls} pl-10`}
+            value={password}
+            onChange={setPassword}
+          />
+        </div>
       </label>
 
-      {/* 4. Tambah id="register-submit-button" */}
-      <button
-        id="register-submit-button"
-        type="submit"
-        disabled={busy}
-        className="w-full rounded-lg bg-teal-700 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60"
-      >
+      <button id="register-submit-button" type="submit" disabled={busy} className={`${btnPrimary} w-full`}>
         {busy ? "Memproses..." : "Daftar"}
       </button>
 
-      <p className="text-sm text-slate-600">
-        Sudah punya akun? <Link className="font-semibold text-teal-700" to="/auth/login">Masuk</Link>
+      <p className="text-center text-sm text-slate-600">
+        Sudah punya akun? <Link className="font-semibold text-teal-700 hover:text-teal-800 hover:underline" to="/auth/login">Masuk</Link>
       </p>
     </form>
   );

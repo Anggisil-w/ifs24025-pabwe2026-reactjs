@@ -1,19 +1,46 @@
 @import "tailwindcss";
 
-/* Plus Jakarta Sans (variable, subset latin) — di-host sendiri, di-bundle oleh Vite */
+/* Plus Jakarta Sans (variable, subset latin) — di-host sendiri dari /public/fonts */
 @font-face {
   font-family: 'Plus Jakarta Sans';
   font-style: normal;
   font-display: swap;
   font-weight: 200 800;
-  src: url('./assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2');
+  src: url('/fonts/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+@theme {
+  --animate-fade-up: fade-up 0.45s ease-out backwards;
+  --animate-pop: pop 0.22s ease-out backwards;
+  --animate-float: float 9s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.96) translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
+}
+
 @layer base {
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-image:
+      radial-gradient(50rem 28rem at 100% -8%, rgb(20 184 166 / 0.10), transparent 70%),
+      radial-gradient(40rem 26rem at -10% 4%, rgb(16 185 129 / 0.07), transparent 70%);
+    background-attachment: fixed;
   }
+
+  ::selection { background: rgb(20 184 166 / 0.25); }
 
   button,
   a,
@@ -24,4 +51,10 @@
   summary {
     cursor: pointer;
   }
+
+  a:focus-visible { outline: none; border-radius: 0.5rem; box-shadow: 0 0 0 4px rgb(20 184 166 / 0.3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
