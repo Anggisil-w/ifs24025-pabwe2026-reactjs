@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function Modal({ title, onClose, children }) {
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
@@ -8,3 +10,9 @@ export default function Modal({ title, onClose, children }) {
     </div>
   );
 }
+
+Modal.propTypes = {
+  title: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.node,
+};

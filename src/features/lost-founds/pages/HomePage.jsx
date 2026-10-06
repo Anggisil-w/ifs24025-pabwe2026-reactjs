@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { IconAlertCircle, IconCircleCheck, IconInbox, IconListDetails, IconPackage, IconPhotoOff, IconPlus, IconSearch } from "@tabler/icons-react";
 import clsx from "clsx";
+import PropTypes from "prop-types";
 import useInput from "../../../hooks/useInput";
 import { asyncGetLostFounds } from "../states/action";
 import { coverUrl, formatDate } from "../../../helpers/toolsHelper";
@@ -15,6 +16,8 @@ export const StatusBadge = ({ status }) => (
 
 const sel = "rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm shadow-sm transition hover:border-slate-300 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/15";
 const tones = { teal: "bg-teal-50 text-teal-700", rose: "bg-rose-50 text-rose-700", emerald: "bg-emerald-50 text-emerald-700", slate: "bg-slate-100 text-slate-600" };
+
+StatusBadge.propTypes = { status: PropTypes.string.isRequired };
 
 // Kartu dipisah & di-memo agar re-render akibat state lain (mis. profil) tidak menggambar ulang seluruh daftar.
 const ReportCard = memo(function ReportCard({ item: i }) {
@@ -34,6 +37,19 @@ const ReportCard = memo(function ReportCard({ item: i }) {
     </li>
   );
 });
+
+ReportCard.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    status: PropTypes.string,
+    is_completed: PropTypes.number,
+    cover: PropTypes.string,
+    created_at: PropTypes.string,
+    author: PropTypes.shape({ name: PropTypes.string }),
+  }).isRequired,
+};
 
 function HomePage() {
   const dispatch = useDispatch();

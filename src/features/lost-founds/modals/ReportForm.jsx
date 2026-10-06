@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import useInput from "../../../hooks/useInput";
 import { btnPrimary, inputCls } from "../../../helpers/uiClasses";
 
@@ -30,3 +31,15 @@ export default function ReportForm({ initial = {}, withCompleted, submitLabel, o
     </form>
   );
 }
+
+ReportForm.propTypes = {
+  initial: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    status: PropTypes.string,
+    is_completed: PropTypes.number,
+  }),
+  withCompleted: PropTypes.bool,
+  submitLabel: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 import Modal from "./Modal";
 import { asyncChangeCover } from "../states/action";
 import { btnPrimary } from "../../../helpers/uiClasses";
@@ -19,3 +20,9 @@ export default function ChangeCoverModal({ id, onClose, onDone }) {
     </Modal>
   );
 }
+
+ChangeCoverModal.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  onClose: PropTypes.func.isRequired,
+  onDone: PropTypes.func.isRequired,
+};

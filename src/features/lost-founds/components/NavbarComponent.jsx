@@ -1,4 +1,5 @@
 import { memo } from "react";
+import PropTypes from "prop-types";
 import { IconLogout } from "@tabler/icons-react";
 import { btnGhost } from "../../../helpers/uiClasses";
 
@@ -16,3 +17,8 @@ function NavbarComponent({ name, onLogout }) {
 }
 
 export default memo(NavbarComponent);
+
+NavbarComponent.propTypes = {
+  name: PropTypes.string,
+  onLogout: PropTypes.func.isRequired,
+};
