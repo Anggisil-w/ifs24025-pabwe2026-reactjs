@@ -74,6 +74,30 @@ describe("Login & Register pages", () => {
     expect(apiFetch).not.toHaveBeenCalledWith("/auth/register", expect.anything());
   });
 
+  it("rejects register when the name or email is empty", async () => {
+    renderWithProviders(<App />, { route: "/auth/register" });
+    await userEvent.type(document.getElementById("register-email-input"), "b@x.com");
+    await userEvent.type(document.getElementById("register-password-input"), "secret1");
+    await userEvent.click(screen.getByRole("button", { name: "Daftar" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledTimes(1));
+    await userEvent.type(document.getElementById("register-name-input"), "Budi");
+    await userEvent.clear(document.getElementById("register-email-input"));
+    await userEvent.click(screen.getByRole("button", { name: "Daftar" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledTimes(2));
+    expect(apiFetch).not.toHaveBeenCalledWith("/auth/register", expect.anything());
+  });
+
+  it("stays on register when the API rejects", async () => {
+    routeApi({ "POST /auth/register": new Error("email dipakai") });
+    renderWithProviders(<App />, { route: "/auth/register" });
+    await userEvent.type(document.getElementById("register-name-input"), "Budi");
+    await userEvent.type(document.getElementById("register-email-input"), "b@x.com");
+    await userEvent.type(document.getElementById("register-password-input"), "secret1");
+    await userEvent.click(screen.getByRole("button", { name: "Daftar" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(expect.objectContaining({ icon: "error" })));
+    expect(screen.getByRole("heading", { name: "Daftar akun" })).toBeInTheDocument();
+  });
+
   it("registers and goes to login", async () => {
     renderWithProviders(<App />, { route: "/auth/register" });
     await userEvent.type(document.getElementById("register-name-input"), "Budi");
@@ -195,6 +219,20 @@ describe("Users & Profile pages", () => {
     renderWithProviders(<ProfilePage />, { preloadedState: authed });
     expect(screen.getByRole("heading", { name: "Budi" })).toBeInTheDocument();
     expect(screen.getByText("B")).toBeInTheDocument();
+  });
+
+  it("falls back to the email or a question mark for the avatar initial", async () => {
+    const { unmount } = renderWithProviders(<ProfilePage />, { preloadedState: { auth: { token: "t", user: { id: 3, email: "zed@x.com" } } } });
+    expect(screen.getByText("Z")).toBeInTheDocument();
+    unmount();
+    renderWithProviders(<ProfilePage />, { preloadedState: { auth: { token: "t", user: { id: 4 } } } });
+    expect(screen.getByText("?")).toBeInTheDocument();
+  });
+
+  it("uses a question mark for users without name and email", async () => {
+    routeApi({ "GET /users": { data: { users: [{ id: 5 }] } } });
+    renderWithProviders(<UsersPage />);
+    expect(await screen.findByText("?")).toBeInTheDocument();
   });
 
   it("renders the profile page and users page via routes", async () => {
