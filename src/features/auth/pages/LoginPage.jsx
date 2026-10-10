@@ -20,7 +20,7 @@ export default function LoginPage() {
     e.preventDefault();
     if (!email || !password) return showErrorDialog("Email dan kata sandi wajib diisi.");
     setBusy(true);
-    const ok = await dispatch(asyncLogin({ email, password }));
+    const ok = await Promise.resolve(dispatch(asyncLogin({ email, password })));
     setBusy(false);
     if (ok) navigate("/");
   };

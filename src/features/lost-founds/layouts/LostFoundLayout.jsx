@@ -16,7 +16,7 @@ export default function LostFoundLayout() {
     dispatch(asyncGetProfile()).then((ok) => { if (!ok) dispatch(asyncLogout()); });
   }, [token, dispatch]);
 
-  const logout = useCallback(async () => { await dispatch(asyncLogout()); navigate("/auth/login"); }, [dispatch, navigate]);
+  const logout = useCallback(async () => { await Promise.resolve(dispatch(asyncLogout())); navigate("/auth/login"); }, [dispatch, navigate]);
 
   if (!token) return <Navigate to="/auth/login" replace />;
 

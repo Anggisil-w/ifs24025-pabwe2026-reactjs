@@ -19,7 +19,7 @@ export default function DetailPage() {
   const [failedId, setFailedId] = useState(null);
   const [brokenId, setBrokenId] = useState(null);
   const failed = failedId === id;
-  const load = async () => { const ok = await dispatch(asyncGetLostFound(id)); setFailedId(ok ? null : id); };
+  const load = async () => { const ok = await Promise.resolve(dispatch(asyncGetLostFound(id))); setFailedId(ok ? null : id); };
   useEffect(() => {
     let alive = true;
     dispatch(asyncGetLostFound(id)).then((ok) => { if (alive) setFailedId(ok ? null : id); });
@@ -29,7 +29,7 @@ export default function DetailPage() {
   if (failed) return (<section className="max-w-2xl space-y-3 rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm sm:text-left"><h1 className="text-2xl font-extrabold tracking-tight">Laporan tidak ditemukan</h1><p className="text-slate-600">Laporan ini tidak ada atau tidak bisa dimuat.</p><Link to="/" className="inline-block text-sm font-semibold text-teal-700 hover:underline">← Kembali ke daftar</Link></section>);
   if (!item) return (<section aria-busy="true"><h1 className="sr-only">Detail laporan</h1><p className="animate-pulse text-slate-600">Memuat laporan...</p></section>);
   const owner = me && me.id === item.user_id;
-  const remove = async () => { if (await dispatch(asyncDeleteLostFound(item.id))) navigate("/"); };
+  const remove = async () => { if (await Promise.resolve(dispatch(asyncDeleteLostFound(item.id)))) navigate("/"); };
 
   return (
     <article className="max-w-3xl animate-fade-up space-y-5">

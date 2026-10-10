@@ -11,7 +11,7 @@ export default function ChangeCoverModal({ id, onClose, onDone }) {
   const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
 
-  const submit = async () => { if (await dispatch(asyncChangeCover(id, file))) { onClose(); onDone(); } };
+  const submit = async () => { if (await Promise.resolve(dispatch(asyncChangeCover(id, file)))) { onClose(); onDone(); } };
   return (
     <Modal title="Ganti cover" onClose={onClose}>
       <input id="cover-file" name="cover" aria-label="Pilih foto cover" type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0] ?? null)} className="mb-3 block w-full rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-teal-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-teal-700 hover:border-teal-400 hover:file:bg-teal-100" />

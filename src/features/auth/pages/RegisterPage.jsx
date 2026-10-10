@@ -21,7 +21,7 @@ export default function RegisterPage() {
     e.preventDefault();
     if (!name || !email || password.length < 6) return showErrorDialog("Lengkapi data; kata sandi minimal 6 karakter.");
     setBusy(true);
-    const ok = await dispatch(asyncRegister({ name, email, password }));
+    const ok = await Promise.resolve(dispatch(asyncRegister({ name, email, password })));
     setBusy(false);
     if (ok) navigate("/auth/login");
   };
