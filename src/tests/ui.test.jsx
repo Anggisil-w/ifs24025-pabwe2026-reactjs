@@ -13,6 +13,8 @@ import { renderWithProviders } from "../test-utils";
 import Modal from "../features/lost-founds/modals/Modal";
 import ReportForm from "../features/lost-founds/modals/ReportForm";
 import ChangeCoverModal from "../features/lost-founds/modals/ChangeCoverModal";
+import AddModal from "../features/lost-founds/modals/AddModal";
+import ChangeModal from "../features/lost-founds/modals/ChangeModal";
 import NavbarComponent from "../features/lost-founds/components/NavbarComponent";
 import SidebarComponent from "../features/lost-founds/components/SidebarComponent";
 import DetailPage from "../features/lost-founds/pages/DetailPage";
@@ -245,6 +247,23 @@ describe("Detail page", () => {
     expect(await screen.findByText("Beranda")).toBeInTheDocument();
   });
 
+  it("ignores a late response after unmount, hides owner actions without a user and tolerates a missing author", async () => {
+    routeApi({ "GET /lost-founds/7": { data: { lost_found: { ...item, author: undefined } } } });
+    renderDetail({ auth: { token: "t", user: null } });
+    expect(await screen.findByRole("heading", { name: "Dompet" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Hapus/ })).not.toBeInTheDocument();
+  });
+
+  it("does not update state when unmounted before the report loads", async () => {
+    let resolve;
+    apiFetch.mockImplementation(() => new Promise((r) => { resolve = r; }));
+    const { unmount } = renderDetail();
+    unmount();
+    resolve({ data: { lost_found: item } });
+    await Promise.resolve();
+    expect(apiFetch).toHaveBeenCalled();
+  });
+
   it("stays on the page when delete is cancelled", async () => {
     Swal.fire.mockResolvedValue({ isConfirmed: false });
     renderDetail();
@@ -303,5 +322,43 @@ describe("Modal pieces", () => {
     renderWithProviders(<ChangeCoverModal id={1} onClose={() => {}} onDone={() => {}} />);
     fireEvent.change(screen.getByLabelText("Pilih foto cover"), { target: { files: [] } });
     expect(screen.getByRole("button", { name: "Unggah cover" })).toBeDisabled();
+  });
+
+  it("keeps the add modal open when saving fails", async () => {
+    routeApi({ "POST /lost-founds": new Error("gagal") });
+    const onClose = vi.fn();
+    const onDone = vi.fn();
+    renderWithProviders(<AddModal onClose={onClose} onDone={onDone} />);
+    await userEvent.type(document.getElementById("report-title"), "T");
+    await userEvent.type(document.getElementById("report-description"), "D");
+    await userEvent.click(screen.getByRole("button", { name: "Simpan laporan" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(expect.objectContaining({ icon: "error" })));
+    expect(onClose).not.toHaveBeenCalled();
+    expect(onDone).not.toHaveBeenCalled();
+  });
+
+  it("keeps the change modal open when saving fails", async () => {
+    routeApi({ "PUT /lost-founds/7": new Error("gagal") });
+    const onClose = vi.fn();
+    const onDone = vi.fn();
+    renderWithProviders(<ChangeModal item={item} onClose={onClose} onDone={onDone} />);
+    await userEvent.click(screen.getByRole("button", { name: "Simpan perubahan" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(expect.objectContaining({ icon: "error" })));
+    expect(onClose).not.toHaveBeenCalled();
+    expect(onDone).not.toHaveBeenCalled();
+  });
+
+  it("keeps the cover modal open when upload fails", async () => {
+    URL.createObjectURL = vi.fn(() => "blob:x");
+    URL.revokeObjectURL = vi.fn();
+    routeApi({ "POST /lost-founds/7/cover": new Error("gagal") });
+    const onClose = vi.fn();
+    const onDone = vi.fn();
+    renderWithProviders(<ChangeCoverModal id={7} onClose={onClose} onDone={onDone} />);
+    await userEvent.upload(screen.getByLabelText("Pilih foto cover"), new File(["x"], "a.png", { type: "image/png" }));
+    await userEvent.click(screen.getByRole("button", { name: "Unggah cover" }));
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(expect.objectContaining({ icon: "error" })));
+    expect(onClose).not.toHaveBeenCalled();
+    expect(onDone).not.toHaveBeenCalled();
   });
 });
