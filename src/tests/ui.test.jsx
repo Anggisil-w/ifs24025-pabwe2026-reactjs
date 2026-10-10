@@ -281,6 +281,19 @@ describe("Detail page", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
 
+  it("shows the not-found message when reloading after an edit fails", async () => {
+    let loads = 0;
+    const base = apiFetch.getMockImplementation();
+    apiFetch.mockImplementation(async (path, opts = {}) => {
+      if (path === "/lost-founds/7" && (opts.method || "GET") === "GET" && ++loads > 1) throw new Error("404");
+      return base(path, opts);
+    });
+    renderDetail();
+    await userEvent.click(await screen.findByRole("button", { name: /Ubah laporan/ }));
+    await userEvent.click(screen.getByRole("button", { name: "Simpan perubahan" }));
+    expect(await screen.findByRole("heading", { name: "Laporan tidak ditemukan" })).toBeInTheDocument();
+  });
+
   it("changes the cover", async () => {
     URL.createObjectURL = vi.fn(() => "blob:x");
     URL.revokeObjectURL = vi.fn();
